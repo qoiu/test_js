@@ -22,7 +22,8 @@ void download(
 
 Future<Uint8List?> getQRCode() async {
   final response = await http.get(Uri.parse('https://zm2.itpw.ru:19544/media/defaults/recycle.png'), headers: {
-
+  // final response = await http.get(Uri.parse('https://xn----8sbbdpb0bduddg8jxb.xn--p1ai/wp-content/uploads/2022/09/dogovor.pdf'), headers: {
+  // 'Access-Control-Allow-Origin': 'http://your-frontend-domain.com',
     'Accept': 'application/octet-stream', // Specify desired file type
     // Add other headers if necessary
   });

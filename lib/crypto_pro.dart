@@ -85,14 +85,16 @@ class CryptoPro{
         debugPrint('encode: $encode');
         var oneLine = encode.replaceAll('\n', '');
         debugPrint('encode one line: $oneLine');
-        download(utf8.encode(oneLine), downloadName: 'test_sign.sig');
+        // download(utf8.encode(oneLine), downloadName: 'test_sign.sig');
       }
       if (event.data.toString().startsWith('image:')) {
         var encode = event.data.toString().split(':')[1];
         debugPrint('encode: $encode');
         debugPrint('encode one line: ${encode.replaceAll('\n', '')}');
         // download(utf8.encode( event.data.toString()), downloadName: 'recycle.png');
-        download(base64Decode(encode), downloadName: 'recycle.png');
+
+        //correct
+        // download(base64Decode(encode), downloadName: 'recycle.pdf');
       }
     });
   }
@@ -125,7 +127,18 @@ class CryptoPro{
           // var decode = utf8.decode(qr);
     // debugPrint('decode: $decode');
           var jsPromise = await _cades_bytes_test(base64String, 'recycle.png', 'Никита', '', '');
-          // download(base64Decode(base64String), downloadName: 'recycle.png');
+    // var certs  = await promiseToFuture(jsPromise);
+          download(base64Decode(base64String), downloadName: 'recycle.png');
+
+
+
+    //       String base64String = base64Encode(bytes);
+    //       debugPrint('base64String: $base64String');
+    //       var jsPromise = await _cades_bytes_test(bytes, name, 'Никита', '', '');
+    //       download(base64Decode(base64String), downloadName: 'test_result.txt');
+    //     } catch (e) {
+    //       debugPrint(e.toString());
+    //     }
 
     // FilePickerResult? result = await FilePicker.platform.pickFiles();
     //
@@ -152,12 +165,15 @@ class CryptoPro{
     // var utf8Decode = utf8.decode(file.bytes!);
     // debugPrint('utf8: $utf8Decode');
     // var jsPromise = await _cades_bytes_test(base64Decode(utf8Decode), file.name, 'Никита', '', '');
-    // print('promise: $jsPromise');
-    // var certs  = await promiseToFuture(jsPromise);
+    print('promise: $jsPromise');
+    var certs  = await promiseToFuture(jsPromise);
     // print('certs: ${certs.toString()}');
-    // var jsonDecode2 = jsonDecode(certs);
-    // print('certs decode: $jsonDecode2');
-    // print('certs decode: ${jsonDecode2['result']}');
+    var jsonDecode2 = jsonDecode(certs.toString().replaceAll('\n', ''));
+    print('certs decode: $jsonDecode2');
+    print('sign: ${jsonDecode2['message']}');
+    print('bytes: ${jsonDecode2['bytes']}');
+    download(utf8.encode(jsonDecode2['message'].toString().replaceAll('\n', '')), downloadName: 'test_sign.sig');
+    // download(base64Decode(jsonDecode2['bytes']), downloadName: 'recycle.png');
     // var value = (jsonDecode2['result'] as List<dynamic>);
     // return Future.value(value.map((e)=>(e as Map?)).nonNulls.toList());
 

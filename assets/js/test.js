@@ -377,16 +377,18 @@ window._cades_bytes_test = async function (base64bytes, fileName, certName, base
     //  const file = base64ToFile('data:image/png;base64,'+base64bytes, fileName)
     //  console.log('fileName'+fileName);
     //  console.log(file);
-    window.parent.postMessage('image:' + base64bytes, '*');
+    // window.parent.postMessage('image:' + base64bytes, '*');
 //remove data:image/png;base64,
 //     cades_load_files(certName, file,baseUrl,token)
-    cades_load_bytes(certName, base64bytes, baseUrl, token)
+    return await cades_load_bytes(certName, base64bytes, baseUrl, token)
+
 
 }
 
 async function cades_load_bytes(certName, bytes, baseUrl, token) {
 
-    await cadesplugin.async_spawn(function* (args) {
+    var messageResponse = '';
+    return await cadesplugin.async_spawn(function* (args) {
         // Проверяем, работает ли File API
 
         // const oFReader = new FileReader();
@@ -396,7 +398,7 @@ async function cades_load_bytes(certName, bytes, baseUrl, token) {
         // var sFileData = oFREvent.target.result;
         // var sBase64Data = sFileData.substr(sFileData.indexOf(header) + header.length);
 
-        console.log('start cades');
+        // console.log('start cades');
         var oStore = yield cadesplugin.CreateObjectAsync("CAdESCOM.Store");
         yield oStore.Open(cadesplugin.CAPICOM_CURRENT_USER_STORE, cadesplugin.CAPICOM_MY_STORE,
             cadesplugin.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED);
@@ -414,23 +416,27 @@ async function cades_load_bytes(certName, bytes, baseUrl, token) {
         var oSigner = yield cadesplugin.CreateObjectAsync("CAdESCOM.CPSigner");
         yield oSigner.propset_Certificate(oCertificate);
         yield oSigner.propset_CheckCertificate(true);
-        console.log('oSigner');
+        // console.log('oSigner');
 
         var oSignedData = yield cadesplugin.CreateObjectAsync("CAdESCOM.CadesSignedData");
         yield oSignedData.propset_ContentEncoding(cadesplugin.CADESCOM_BASE64_TO_BINARY);
         yield oSignedData.propset_Content(bytes);
-        console.log('oSignedData.propset_Conten');
+        // console.log('oSignedData.propset_Conten');
 
         try {
             const sSignedMessage = yield oSignedData.SignCades(oSigner, cadesplugin.CADESCOM_CADES_BES, true);
-            console.log('message: ' + sSignedMessage)
-            window.parent.postMessage('sign:' + sSignedMessage, '*');
+            // console.log('message: ' + sSignedMessage)
+            // window.parent.postMessage('sign:' + sSignedMessage, '*');
+            yield oStore.Close();
+            return Promise.resolve(JSON.stringify({
+                'message': sSignedMessage,
+                'bytes': bytes
+            }))
         } catch (err) {
             alert("Failed to create signature. Error: " + cadesplugin.getLastError(err));
             return;
         }
 
-        yield oStore.Close();
 
         // yield sendFormData(oFile,certName,baseUrl,token)
     });
@@ -439,6 +445,7 @@ async function cades_load_bytes(certName, bytes, baseUrl, token) {
 
 async function cades_load_files(certName, oFile, baseUrl, token) {
 
+    var messageResponse = '';
     await cadesplugin.async_spawn(function* (args) {
         // Проверяем, работает ли File API
 
