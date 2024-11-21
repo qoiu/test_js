@@ -1,14 +1,17 @@
 
 @JS()
 library js_interop;
-
+import 'dart:html' as html;
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:js/js.dart';
 import 'dart:js' as js;
 
 import 'package:js/js_util.dart';
+import 'package:test_js/download.dart';
 
 @JS()
 external _helloWorld2(String text);
@@ -66,14 +69,32 @@ external _cades_create_signature(String cert, String data);
 @JS()
 external _cades_decode(String data);
 @JS()
-external _cades_file_test();
+external _cades_file_test(String certName, String baseUrl, String token);
+@JS()
+external _cades_bytes_test(String bytes, String fileName, String certName, String baseUrl, String token);
 
 class CryptoPro{
 
 
 
   static init(){
-    _init_crypto_pro();
+    html.window.onMessage.listen((event) {
+      debugPrint('Flutter: Получено сообщение  от JavaScript: ${event.data}');
+      if (event.data.toString().startsWith('sign:')) {
+        var encode = event.data.toString().split(':')[1];
+        debugPrint('encode: $encode');
+        var oneLine = encode.replaceAll('\n', '');
+        debugPrint('encode one line: $oneLine');
+        download(utf8.encode(oneLine), downloadName: 'test_sign.sig');
+      }
+      if (event.data.toString().startsWith('image:')) {
+        var encode = event.data.toString().split(':')[1];
+        debugPrint('encode: $encode');
+        debugPrint('encode one line: ${encode.replaceAll('\n', '')}');
+        // download(utf8.encode( event.data.toString()), downloadName: 'recycle.png');
+        download(base64Decode(encode), downloadName: 'recycle.png');
+      }
+    });
   }
 
   static helloWorld(String text){
@@ -96,15 +117,51 @@ class CryptoPro{
   }
 
   static Future<List<Map>> test()async{
-    var jsPromise = await _cades_get_certificates();
-    print('promise: $jsPromise');
-    var certs  = await promiseToFuture(jsPromise);
-    print('certs: ${certs.toString()}');
-    var jsonDecode2 = jsonDecode(certs);
-    print('certs decode: $jsonDecode2');
-    print('certs decode: ${jsonDecode2['result']}');
-    var value = (jsonDecode2['result'] as List<dynamic>);
-    return Future.value(value.map((e)=>(e as Map?)).nonNulls.toList());
+
+    var qr = (await getQRCode())!;
+    debugPrint('qr = $qr');
+
+          String base64String = base64Encode(qr);
+          // var decode = utf8.decode(qr);
+    // debugPrint('decode: $decode');
+          var jsPromise = await _cades_bytes_test(base64String, 'recycle.png', 'Никита', '', '');
+          // download(base64Decode(base64String), downloadName: 'recycle.png');
+
+    // FilePickerResult? result = await FilePicker.platform.pickFiles();
+    //
+    // if (result != null) {
+    //   var bytes = result.files.single.bytes; // Access bytes instead of path
+    //   var name = result.files.single.name;
+    //   debugPrint('bytes: $bytes');
+    //   if (bytes != null) { //Check for null, in case the file doesn't have bytes
+    //     try {
+    //       String base64String = base64Encode(bytes);
+    //       debugPrint('base64String: $base64String');
+    //       var jsPromise = await _cades_bytes_test(bytes, name, 'Никита', '', '');
+    //       download(base64Decode(base64String), downloadName: 'test_result.txt');
+    //     } catch (e) {
+    //       debugPrint(e.toString());
+    //     }
+    //   } else {
+    //   }
+    // }
+
+    // var file = (await FilePicker.platform.pickFiles( type: FileType.any, withData: true))?.files.first;
+    // if(file==null)return [];
+    // File newF = File(file.bytes)
+    // var utf8Decode = utf8.decode(file.bytes!);
+    // debugPrint('utf8: $utf8Decode');
+    // var jsPromise = await _cades_bytes_test(base64Decode(utf8Decode), file.name, 'Никита', '', '');
+    // print('promise: $jsPromise');
+    // var certs  = await promiseToFuture(jsPromise);
+    // print('certs: ${certs.toString()}');
+    // var jsonDecode2 = jsonDecode(certs);
+    // print('certs decode: $jsonDecode2');
+    // print('certs decode: ${jsonDecode2['result']}');
+    // var value = (jsonDecode2['result'] as List<dynamic>);
+    // return Future.value(value.map((e)=>(e as Map?)).nonNulls.toList());
+
+    return Future.value([]);
   }
 
   static Future<String> setData(String cert, String data)async{
@@ -139,7 +196,14 @@ class CryptoPro{
   }
 
   static cadesFile()async{
-    await  _cades_file_test();
+    var jsPromise = await  _cades_file_test("Никита",' https://zm2.itpw.ru:19544','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYjI2ZmJmNmEtNmQzYS00YzlhLTlmZmYtM2RiYjQxMGFiNWYwIiwidXNlcm5hbWUiOiJxIiwiZXhwIjoxNzMxNDA3MzI3fQ.psHEP2yuaOgDYWG6uyFRxvsJl0mDSJod86ck1uC_jEY');
+    print('promise: $jsPromise');
+    var certs  = await promiseToFuture(jsPromise);
+    print('certs: ${certs.toString()}');
+    var jsonDecode2 = jsonDecode(certs);
+    print('certs decode: $jsonDecode2');
+    print('certs decode: ${jsonDecode2['result']}');
+    var value = (jsonDecode2['result'] as String?)??'';
   }
 
   static cadies(){

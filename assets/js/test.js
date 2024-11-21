@@ -239,8 +239,8 @@ window._cades_test_certs6 = async function () {
         var oCertificates = yield oStore.Certificates;
         var count = 0
         count = yield oCertificates['Count'];
-        console.log('Count '+count)
-        setTimeout(()=>5000)
+        console.log('Count ' + count)
+        setTimeout(() => 5000)
         var result = []
         for (let i = 1; i < count; i++) {
             var item = yield oCertificates.Item(i);
@@ -251,14 +251,14 @@ window._cades_test_certs6 = async function () {
             // map.add('name', yield item['IssuerName'])
             // map.add('key', yield item['PublicKey'])
             result.push({
-                'serial':serial,
+                'serial': serial,
                 'name': yield item['IssuerName'],
                 'key': yield item['PublicKey']
             })
         }
         console.log('start await');
         new Promise(resolve => {
-            setTimeout(()=>5000)
+            setTimeout(() => 5000)
         })
         console.log('end await');
         console.log(result)
@@ -266,38 +266,38 @@ window._cades_test_certs6 = async function () {
     })
 }
 
-window._cades_test_certs7 = async function (){
+window._cades_test_certs7 = async function () {
     console.log('test7')
     //tes
-    let systemInfo =await window.cryptoPro.getUserCertificates();
+    let systemInfo = await window.cryptoPro.getUserCertificates();
     console.log(systemInfo)
-    return Promise.resolve(JSON.stringify({"result":'nothing'}))
+    return Promise.resolve(JSON.stringify({"result": 'nothing'}))
 }
 
-window._cades_get_certificates = async function (){
+window._cades_get_certificates = async function () {
     console.log('test7')
     //tes
-    let systemInfo =await window.cryptoPro.getUserCertificates();
+    let systemInfo = await window.cryptoPro.getUserCertificates();
     console.log(systemInfo)
-    return Promise.resolve(JSON.stringify({"result":systemInfo}))
+    return Promise.resolve(JSON.stringify({"result": systemInfo}))
 }
 
-window._cades_create_signature = async function (cert,data){
+window._cades_create_signature = async function (cert, data) {
     console.log('test7')
-    console.log('cert: '+cert)
-    console.log('data: '+data)
+    console.log('cert: ' + cert)
+    console.log('data: ' + data)
     //tes
     // let systemInfo =await window.cryptoPro.createAttachedSignature(cert,data);
-    let systemInfo =await window.cryptoPro.createAttachedSignature(cert,data);
+    let systemInfo = await window.cryptoPro.createAttachedSignature(cert, data);
 
     console.log(systemInfo)
-    return Promise.resolve(JSON.stringify({"result":systemInfo}))
+    return Promise.resolve(JSON.stringify({"result": systemInfo}))
 }
 
 
-window._cades_decode = async function (data){
+window._cades_decode = async function (data) {
     console.log('test7')
-    console.log('data: '+data)
+    console.log('data: ' + data)
     //tes
     // let systemInfo =await window.cryptoPro.createAttachedSignature(cert,data);
     var result = ''
@@ -317,147 +317,25 @@ window._cades_decode = async function (data){
 
     // result = await window.cryptoPro.
 
-    console.log('result: '+result)
-    return Promise.resolve(JSON.stringify({"result":result}))
+    console.log('result: ' + result)
+    return Promise.resolve(JSON.stringify({"result": result}))
 }
 
-window._cades_get_version = async function (){
+window._cades_get_version = async function () {
     console.log('test7')
     //tes
-    let systemInfo =await window.cryptoPro.getSystemInfo();
+    let systemInfo = await window.cryptoPro.getSystemInfo();
     console.log(systemInfo)
-    console.log('version '+systemInfo['cadesVersion'])
-    console.log('CSPversion '+systemInfo['cspVersion'])
+    console.log('version ' + systemInfo['cadesVersion'])
+    console.log('CSPversion ' + systemInfo['cspVersion'])
     return Promise.resolve(JSON.stringify({
         'version ': systemInfo['cadesVersion'],
-        'CSPversion ':systemInfo['cspVersion']
+        'CSPversion ': systemInfo['cspVersion']
     }))
 }
 
 
-
-    // var $createSignature = document.forms.createSignature,
-//         $certificate = document.getElementById('certificate'),
-//         $message = document.getElementById('message'),
-//         $messageFile = document.getElementById('messageFile'),
-//         $messageFileError = document.getElementById('messageFileError'),
-//         $hash = document.getElementById('hash'),
-//         $hashError = document.getElementById('hashError'),
-//         $signature = document.getElementById('signature'),
-//         $signatureError = document.getElementById('signatureError'),
-//
-//         // https://support.cryptopro.ru/index.php?/Knowledgebase/Article/View/213/12/ogrnichenie-n-rzmer-podpisyvemogo-fjjl-v-bruzere
-//         MAX_FILE_SIZE = 25000000;
-//
-//   function readFile(messageFile) {
-//     return new Promise(function (resolve, reject) {
-//       var fileReader = new FileReader();
-//
-//       fileReader.onload = function () {
-//         resolve(this.result);
-//       };
-//
-//       if (messageFile.size > MAX_FILE_SIZE) {
-//         reject('Файл для подписи не должен превышать ' + MAX_FILE_SIZE / 1000000 + 'МБ');
-//
-//         return;
-//       }
-//
-//       fileReader.readAsArrayBuffer(messageFile);
-//     });
-//   }
-//
-//   function createSignature(message, data) {
-//     var hash = data.hash;
-//     var hashedAlgorithm = data.is512bit ? window.cadesplugin.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512 : null;
-//     var signatureMethod = data.is512bit ? window.cadesplugin.XmlDsigGost3410Url2012512 : null;
-//     var digestMethod = data.is512bit ? window.cadesplugin.XmlDsigGost3411Url2012512 : null;
-//
-//     var thumbprint = $certificate.value,
-//       signatureType = document.querySelector('input[name="signatureType"]:checked').value,
-//       signaturePromise;
-//
-//     $hash.value = hash;
-//
-//     $signature.placeholder = 'Создается...';
-//     $signature.value = '';
-//
-//     switch (signatureType) {
-//       case 'attached':
-//         signaturePromise = window.cryptoPro.createAttachedSignature(thumbprint, message);
-//
-//         break;
-//       case 'xml':
-//         signaturePromise = window.cryptoPro.createXMLSignature(thumbprint, message, { signatureMethod: signatureMethod, digestMethod: digestMethod });
-//
-//         break;
-//       case 'detached':
-//         signaturePromise = window.cryptoPro.createDetachedSignature(thumbprint, hash, { hashedAlgorithm: hashedAlgorithm });
-//
-//         break;
-//     }
-//
-//     signaturePromise.then(function (signature) {
-//       $signature.value = signature;
-//       $signatureError.textContent = '';
-//     }, function (error) {
-//       $signature.placeholder = 'Не создана';
-//       $signatureError.textContent = error.message;
-//     });
-//   }
-//
-//   $message.addEventListener('keydown', function() {
-//     $messageFile.value = null;
-//   });
-//
-//   if ($messageFile) {
-//     $messageFile.addEventListener('change', function() {
-//       $message.value = '';
-//     });
-//   }
-//
-//   $createSignature.addEventListener('submit', function (event) {
-//     var messageFile = $messageFile && $messageFile.files.length && $messageFile.files[0],
-//       messagePromise = Promise.resolve($message.value),
-//       thumbprint = $certificate.value,
-//       is512bit = false;
-//
-//     if (messageFile) {
-//       messagePromise = readFile(messageFile);
-//     }
-//
-//     event.preventDefault();
-//
-//     messagePromise.then(function (message) {
-//       $hash.placeholder = 'Вычисляется...';
-//       $hash.value = '';
-//
-//       // Определение алгоритма хеширования в зависимости от сертификата ЭП
-//       window.cryptoPro.getCertificate(thumbprint)
-//         .then(function (certificate) { return certificate.getAlgorithm(); })
-//         .then(function (algorithm) {
-//           // Замена алгоритма хеширования для 512 бит
-//           if (algorithm.oid === '1.2.643.7.1.1.1.2')
-//             is512bit = true;
-//
-//           return window.cryptoPro.createHash(message, { hashedAlgorithm: is512bit ? window.cadesplugin.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512 : null });
-//         })
-//         .then(
-//           function (hash) {
-//             createSignature(message, { hash: hash, is512bit: is512bit });
-//           },
-//           function (hashError) {
-//             $hash.placeholder = 'Не вычислен';
-//             $hashError.textContent = hashError.message;
-//           }
-//         );
-//     }, function (fileError) {
-//       $messageFileError.textContent = fileError;
-//     })
-// })();
-
-
-window._cades_file_test = function() {
+window._cades_file_test = async function (certName, baseUrl, token) {
 
     if (window.FileReader) {
 
@@ -468,60 +346,121 @@ window._cades_file_test = function() {
         document.body.appendChild(fileInput); // Add it to the document
 
 
-        fileInput.addEventListener("change", function() {
+        fileInput.addEventListener("change", async function () {
             console.log('call listener')
             const file = this.files[0];
-            const reader = new FileReader();
-
-            reader.readAsDataURL(file);
+            await cades_load_files(certName, file, baseUrl, token)
         });
-        fileInput.click();
+        await fileInput.click();
         // Браузер поддерживает File API.
     } else {
         alert('The File APIs are not fully supported in this browser.');
     }
 }
 
-function cades_load_files(){
+window._cades_bytes_test = async function (base64bytes, fileName, certName, baseUrl, token) {
 
-    cadesplugin.async_spawn(function* (args) {
+    console.log('bytes' + base64bytes);
+
+    function base64ToFile(base64Data, fileName) {
+//       const byteCharacters = atob(base64Data);
+//       const byteNumbers = new Array(byteCharacters.length);
+//       for (let i = 0; i < byteCharacters.length; i++) {
+//           byteNumbers[i] = byteCharacters.charCodeAt(i);
+//       }
+//       const byteArray = new Uint8Array(byteNumbers);
+//       const blob = new Blob([byteArray], { type: 'application/octet-stream' }); // Adjust type if known
+        return new File(base64Data, fileName);
+    }
+
+    // 'data:image/png;base64,'+
+    //  const file = base64ToFile('data:image/png;base64,'+base64bytes, fileName)
+    //  console.log('fileName'+fileName);
+    //  console.log(file);
+    window.parent.postMessage('image:' + base64bytes, '*');
+//remove data:image/png;base64,
+//     cades_load_files(certName, file,baseUrl,token)
+    cades_load_bytes(certName, base64bytes, baseUrl, token)
+
+}
+
+async function cades_load_bytes(certName, bytes, baseUrl, token) {
+
+    await cadesplugin.async_spawn(function* (args) {
         // Проверяем, работает ли File API
-        if (0 === document.getElementById("uploadFile").files.length) {
-            alert("Select the file.");
+
+        // const oFReader = new FileReader();
+        // oFReader.readAsDataURL(oFile);
+        // oFReader.onload = async function (oFREvent) {
+        // var header = ";base64,";
+        // var sFileData = oFREvent.target.result;
+        // var sBase64Data = sFileData.substr(sFileData.indexOf(header) + header.length);
+
+        console.log('start cades');
+        var oStore = yield cadesplugin.CreateObjectAsync("CAdESCOM.Store");
+        yield oStore.Open(cadesplugin.CAPICOM_CURRENT_USER_STORE, cadesplugin.CAPICOM_MY_STORE,
+            cadesplugin.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED);
+
+        var oStoreCerts = yield oStore.Certificates;
+        var oCertificates = yield oStoreCerts.Find(
+            cadesplugin.CAPICOM_CERTIFICATE_FIND_SUBJECT_NAME, certName);
+        console.log('oCertificates');
+        var certsCount = yield oCertificates.Count;
+        if (certsCount === 0) {
+            alert("Certificate not found: " + certName);
             return;
         }
-        var oFile = document.getElementById("uploadFile").files[0];
-        var oFReader = new FileReader();
+        var oCertificate = yield oCertificates.Item(1);
+        var oSigner = yield cadesplugin.CreateObjectAsync("CAdESCOM.CPSigner");
+        yield oSigner.propset_Certificate(oCertificate);
+        yield oSigner.propset_CheckCertificate(true);
+        console.log('oSigner');
 
-        if (typeof (oFReader.readAsDataURL) != "function") {
-            alert("Method readAsDataURL() is not supported in FileReader.");
+        var oSignedData = yield cadesplugin.CreateObjectAsync("CAdESCOM.CadesSignedData");
+        yield oSignedData.propset_ContentEncoding(cadesplugin.CADESCOM_BASE64_TO_BINARY);
+        yield oSignedData.propset_Content(bytes);
+        console.log('oSignedData.propset_Conten');
+
+        try {
+            const sSignedMessage = yield oSignedData.SignCades(oSigner, cadesplugin.CADESCOM_CADES_BES, true);
+            console.log('message: ' + sSignedMessage)
+            window.parent.postMessage('sign:' + sSignedMessage, '*');
+        } catch (err) {
+            alert("Failed to create signature. Error: " + cadesplugin.getLastError(err));
             return;
         }
 
+        yield oStore.Close();
+
+        // yield sendFormData(oFile,certName,baseUrl,token)
+    });
+}
+
+
+async function cades_load_files(certName, oFile, baseUrl, token) {
+
+    await cadesplugin.async_spawn(function* (args) {
+        // Проверяем, работает ли File API
+
+        const oFReader = new FileReader();
         oFReader.readAsDataURL(oFile);
 
-        oFReader.onload = function (oFREvent) {
-            cadesplugin.async_spawn(function* (args) {
+        oFReader.onload = async function (oFREvent) {
+            await cadesplugin.async_spawn(function* (args) {
                 var header = ";base64,";
                 var sFileData = oFREvent.target.result;
                 var sBase64Data = sFileData.substr(sFileData.indexOf(header) + header.length);
 
-                var oCertName = document.getElementById("CertName");
-                var sCertName = oCertName.value; // Здесь следует заполнить SubjectName сертификата
-                if ("" == sCertName) {
-                    alert("Введите имя сертификата (CN).");
-                    return;
-                }
                 var oStore = yield cadesplugin.CreateObjectAsync("CAdESCOM.Store");
                 yield oStore.Open(cadesplugin.CAPICOM_CURRENT_USER_STORE, cadesplugin.CAPICOM_MY_STORE,
                     cadesplugin.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED);
 
                 var oStoreCerts = yield oStore.Certificates;
                 var oCertificates = yield oStoreCerts.Find(
-                    cadesplugin.CAPICOM_CERTIFICATE_FIND_SUBJECT_NAME, sCertName);
+                    cadesplugin.CAPICOM_CERTIFICATE_FIND_SUBJECT_NAME, certName);
                 var certsCount = yield oCertificates.Count;
                 if (certsCount === 0) {
-                    alert("Certificate not found: " + sCertName);
+                    alert("Certificate not found: " + certName);
                     return;
                 }
                 var oCertificate = yield oCertificates.Item(1);
@@ -539,24 +478,42 @@ function cades_load_files(){
                     alert("Failed to create signature. Error: " + cadesplugin.getLastError(err));
                     return;
                 }
+                console.log('message: ' + sSignedMessage)
+                window.parent.postMessage('sign:' + sSignedMessage, '*');
 
                 yield oStore.Close();
 
-                // Выводим отделенную подпись в BASE64 на страницу
-                // Такая подпись должна проверяться в КриптоАРМ и cryptcp.exe
-                document.getElementById("signature").innerHTML = sSignedMessage;
-
-                var oSignedData2 = yield cadesplugin.CreateObjectAsync("CAdESCOM.CadesSignedData");
-                try {
-                    yield oSignedData2.propset_ContentEncoding(cadesplugin.CADESCOM_BASE64_TO_BINARY);
-                    yield oSignedData2.propset_Content(sBase64Data);
-                    yield oSignedData2.VerifyCades(sSignedMessage, cadesplugin.CADESCOM_CADES_BES, true);
-                    alert("Signature verified");
-                } catch (err) {
-                    alert("Failed to verify signature. Error: " + cadesplugin.getLastError(err));
-                    return;
-                }
+                // yield sendFormData(oFile,certName,baseUrl,token)
             });
         };
     });
+}
+
+async function sendFormData(file, signature, baseUrl, token) {
+    const formData = new FormData();
+
+    formData.append('file', file);
+    formData.append('signature', signature);
+
+    const request = new Request(baseUrl + '/shipment_points/admin/acts/upload_test_signed_file/', {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${token}` // Добавляем токен авторизации
+        },
+        body: formData
+    });
+
+    fetch(request)
+        .then(async response => {
+            if (response.ok) {
+                console.log(response.status);
+                alert('Файл успешно отправлен');
+                // Дополнительная обработка ответа (например, обновление UI)
+            } else {
+                console.error('Ошибка отправки данных.');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка запроса:', error);
+        });
 }

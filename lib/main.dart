@@ -7,6 +7,7 @@ import 'package:test_js/download.dart';
 
 void main() {
   runApp(const MyApp());
+  CryptoPro.init();
 }
 
 class MyApp extends StatelessWidget {
